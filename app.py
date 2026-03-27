@@ -139,11 +139,17 @@ def on_lang_update(data):
     if peer: emit('peer_lang_changed', {'lang': lang}, to=peer)
 
 if __name__ == '__main__':
+    # Get port from environment variable (Render sets this) or default to 10000
+    port = int(os.environ.get('PORT', 10000))
     ip = get_lan_ip()
+    
     print('\n' + '='*50)
     print('  🌐  LinguaCall Running!')
-    print(f'  Local : http://127.0.0.1:5000')
-    print(f'  WiFi  : http://{ip}:5000  ← share this')
+    print(f'  Local : http://127.0.0.1:{port}')
+    print(f'  WiFi  : http://{ip}:{port}  ← share this')
     print('  Use Chrome for microphone support')
     print('='*50 + '\n')
-    socketio.run(app, host='0.0.0.0', port=5000, debug=False, allow_unsafe_werkzeug=True)
+    
+    # For production, use eventlet or gevent workers
+    # Render will handle the web server binding
+    socketio.run(app, host='0.0.0.0', port=port, debug=False)   
